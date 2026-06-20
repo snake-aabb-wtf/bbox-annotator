@@ -1,0 +1,22 @@
+{
+  "images_dir": "",
+  "labels_dir": "",
+  "classes": [
+    "person"
+  ],
+  "window_w": 1280,
+  "window_h": 720,
+  "auto_save": true,
+  "show_labels": true,
+  "line_thickness": 2,
+  "box_color": [
+    0,
+    255,
+    0
+  ],
+  "preview_color": [
+    0,
+    255,
+    255
+  ]
+}
