@@ -1,9 +1,7 @@
 {
   "images_dir": "",
   "labels_dir": "",
-  "classes": [
-    "person"
-  ],
+  "classes": [],
   "window_w": 1280,
   "window_h": 720,
   "auto_save": true,

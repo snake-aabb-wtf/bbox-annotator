@@ -7,7 +7,7 @@ import json
 DEFAULT_CONFIG = {
     "images_dir": "",
     "labels_dir": "",
-    "classes": ["person"],       # 默认：识别人
+    "classes": [],                 # 默认不预设类别，启动后由用户在界面中添加
     "window_w": 1280,
     "window_h": 720,
     "auto_save": True,

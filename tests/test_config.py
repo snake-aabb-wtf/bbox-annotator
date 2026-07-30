@@ -30,8 +30,8 @@ def test_default_config_has_all_keys():
         assert key in config.DEFAULT_CONFIG
 
 
-def test_default_config_contains_person_class():
-    assert "person" in config.DEFAULT_CONFIG["classes"]
+def test_default_config_classes_default_empty():
+    assert config.DEFAULT_CONFIG["classes"] == []
 
 
 def test_load_config_returns_copy_of_default_when_no_file(tmp_path):
