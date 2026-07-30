@@ -12,7 +12,7 @@
 |----|------|
 | 名称 | BBox Annotator（YOLO 图片标注工具） |
 | 用途 | 为物体检测任务标注边界框，原生导出 YOLO `txt` 格式 |
-| 语言 | Python 3.8+ |
+| 语言 | Python 3.8 ~ 3.12（依赖锁 `numpy<2`，3.13 无 wheel） |
 | 核心依赖 | `opencv-python`(cv2)、`numpy`、`Pillow`(`PIL`)、`tkinter`(标准库) |
 | 运行平台 | 桌面 GUI（OpenCV `highgui` 窗口 + Tkinter 选择器）；Windows 一等公民，Linux/macOS 可跑但中文状态栏需调字体 |
 | 许可 | MIT |
@@ -119,7 +119,7 @@ main.py
 |----|------|------|------|
 | `images_dir` | str | `""` | 图片文件夹（必填） |
 | `labels_dir` | str | `""` | 标签输出目录；为空时回退为 `<images_dir>/labels` |
-| `classes` | list[str] | `["person"]` | 类别名列表；索引即 YOLO `class_id` |
+| `classes` | list[str] | `[]` | 类别名列表（默认不预设，启动时由界面添加）；索引即 YOLO `class_id` |
 | `window_w` | int | `1280` | 窗口宽（像素） |
 | `window_h` | int | `720` | 窗口高（像素） |
 | `auto_save` | bool | `true` | 切换图片时自动保存 |
