@@ -5,16 +5,56 @@ cd /d "%~dp0"
 
 set VENV_DIR=venv
 
+:: ── 选择兼容的 Python 解释器 ──
+:: 项目依赖 numpy<2，而 numpy 1.x 没有 Python 3.13 的二进制轮子，
+:: 因此虚拟环境必须用 Python 3.12 或更低版本来创建。
+set PYTHON_EXE=python
+set MAJ=0
+set MIN=0
+for /f "tokens=2,3 delims=. " %%A in ('"%PYTHON_EXE%" --version 2^>^&1') do (
+    set MAJ=%%A
+    set MIN=%%B
+)
+if %MAJ%==3 if %MIN% GTR 12 goto :need312
+goto :havepy
+
+:need312
+echo [setup] 默认 python 版本过高，需要 Python 3.12 或更低，正在查找 ...
+set "PYTHON_EXE="
+if exist "%LOCALAPPDATA%\Programs\Python\Python312\python.exe" set "PYTHON_EXE=%LOCALAPPDATA%\Programs\Python\Python312\python.exe"
+if not defined PYTHON_EXE if exist "C:\Python312\python.exe" set "PYTHON_EXE=C:\Python312\python.exe"
+if not defined PYTHON_EXE if exist "C:\Users\%USERNAME%\AppData\Local\Programs\Python\Python312\python.exe" set "PYTHON_EXE=C:\Users\%USERNAME%\AppData\Local\Programs\Python\Python312\python.exe"
+if not defined PYTHON_EXE (
+    echo [ERROR] 未找到 Python 3.12。请安装 Python 3.8~3.12 后重试。
+    pause
+    exit /b 1
+)
+echo [setup] 将使用 %PYTHON_EXE% 创建虚拟环境
+
+:havepy
+
 :: ── 检查 / 创建虚拟环境 ──
 if not exist "%VENV_DIR%\Scripts\python.exe" (
     echo [setup] 正在创建虚拟环境 ...
-    python -m venv %VENV_DIR%
+    "%PYTHON_EXE%" -m venv %VENV_DIR%
     if errorlevel 1 (
-        echo [ERROR] 创建虚拟环境失败！请确保已安装 Python 3.8+
+        echo [ERROR] 创建虚拟环境失败！请确保已安装 Python 3.8~3.12
         pause
         exit /b 1
     )
     echo [setup] 虚拟环境已创建
+) else (
+    set VMAJ=0
+    set VMIN=0
+    for /f "tokens=2,3 delims=. " %%A in ('"%VENV_DIR%\Scripts\python.exe" --version 2^>^&1') do (
+        set VMAJ=%%A
+        set VMIN=%%B
+    )
+    if %VMAJ%==3 if %VMIN% GTR 12 (
+        echo [setup] 现有虚拟环境 Python 版本不兼容，正在重建 ...
+        rmdir /s /q "%VENV_DIR%"
+        "%PYTHON_EXE%" -m venv %VENV_DIR%
+    )
 )
 
 :: ── 安装依赖 ──
