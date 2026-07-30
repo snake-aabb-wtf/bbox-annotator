@@ -65,6 +65,7 @@ class FolderSelector(tk.Tk):
         bottom.pack(fill=tk.X, pady=(15, 0))
         ttk.Button(bottom, text="取消", command=self.destroy).pack(side=tk.RIGHT)
         ttk.Button(bottom, text="开始标注", command=self._start).pack(side=tk.RIGHT, padx=(0, 10))
+        ttk.Button(bottom, text="教程", command=self._show_tutorial).pack(side=tk.RIGHT, padx=(0, 10))
 
     def _load_to_ui(self):
         self.img_dir_var.set(self.config.get("images_dir", ""))
@@ -134,6 +135,35 @@ class FolderSelector(tk.Tk):
         save_config(self.config)
 
         self.destroy()
+
+    def _show_tutorial(self):
+        tutorial = (
+            "使用教程\n"
+            "================================\n\n"
+            "鼠标:\n"
+            "  左键画框   右键删框\n"
+            "  滚轮缩放   中键平移\n\n"
+            "键盘:\n"
+            "  D 下一张    A 上一张    S 保存    Z 撤销\n"
+            "  C 清空      R 重置缩放  H 帮助    Q 退出\n"
+        )
+        win = tk.Toplevel(self)
+        win.title("使用教程")
+        win.geometry("420x300")
+        win.resizable(False, False)
+        win.transient(self)
+        win.grab_set()
+
+        frm = ttk.Frame(win, padding=20)
+        frm.pack(fill=tk.BOTH, expand=True)
+
+        txt = tk.Text(frm, wrap=tk.WORD, font=("微软雅黑", 11),
+                      bd=0, highlightthickness=0, bg=self.cget("bg"))
+        txt.insert(tk.END, tutorial)
+        txt.config(state=tk.DISABLED)
+        txt.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Button(frm, text="知道了", command=win.destroy).pack(pady=(12, 0))
 
 
 def run_selector():
