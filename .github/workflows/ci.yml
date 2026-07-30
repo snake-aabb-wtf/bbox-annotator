@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # tkinter 需要系统 Tcl/Tk；opencv-python 需要 libGL；Xvfb 提供无头显示让 tkinter 能实例化窗口
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-tk \
+            python3-venv \
+            xvfb \
+            libgl1 \
+            libglib2.0-0 \
+            libsm6 \
+            libxext6 \
+            libxrender1
+
+      - name: Create virtualenv and install Python deps
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      # 通过 Xvfb 提供虚拟显示，使 selector.py 的 tkinter 窗口可以无头实例化
+      - name: Run smoke tests (headless, under Xvfb)
+        run: |
+          . venv/bin/activate
+          xvfb-run -a python -m pytest -v
