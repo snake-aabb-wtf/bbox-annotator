@@ -330,3 +330,40 @@ Tkinter 选择器，窗口 `600×480`、不可缩放。核心类 `FolderSelector
 - [ ] 切图（`D`/`A`）后 `labels/` 下生成正确的 `.txt`，坐标归一化无误；
 - [ ] 改动启动脚本时 `start.bat` 与 `start.sh` 逻辑一致；
 - [ ] 不提交 `venv/`、`*.log`（见 §11）。
+
+---
+
+## 14. 测试与 CI
+
+### 14.1 冒烟测试结构
+仓库根有 `pytest.ini`（设 `pythonpath = .` + `testpaths = tests`），`tests/` 下按程序文件拆分：
+
+| 文件 | 覆盖 | 要点 |
+|------|------|------|
+| `tests/test_config.py` | `config.py` | 默认配置字段、`load`/`save` 往返、与默认合并；**写操作全部 `mock.patch` 重定向到 `tmp_path`，绝不污染仓库 `config.json`** |
+| `tests/test_annotator.py` | `annotator.py` | cv2↔PIL 互转、画框/标签/中文文字/帮助覆盖层、`HELP_TEXT` 结构（注意 `draw_label` 是就地修改、返回 `None`） |
+| `tests/test_selector.py` | `selector.py` | `importorskip("tkinter")`、类继承关系、tkinter 窗口无头实例化（Linux 无显示时自动跳过） |
+| `tests/test_imports.py` | 顶层 | 导入 `main` 串联四个模块，验证无导入期错误 |
+
+> 冒烟测试只验“能导入、依赖装得上、纯函数不崩”，**绝不主动打开 GUI 窗口**。
+
+### 14.2 本地运行
+- 用 **Python 3.12** 建 venv（项目限 `numpy<2`，Python 3.13 上 numpy 无预编译 wheel，会从源码编译而失败）。
+- 装依赖并跑：
+  ```bash
+  python3.12 -m venv .venv
+  . .venv/Scripts/activate   # 或 .venv/bin/activate
+  pip install -r requirements.txt pytest
+  python -m pytest -v
+  ```
+- 验证完删除 `.venv/`（已在 `.gitignore`）。
+
+### 14.3 CI（` .github/workflows/ci.yml`）
+- 触发：`push`/`PR` 到 `master`，外加 `workflow_dispatch` 手动触发。
+- 运行器 `ubuntu-latest`，用系统 `python3`（自带 `numpy 1.26` wheel，与 `numpy<2` 兼容）。
+- 关键系统依赖：`python3-tk`（tkinter 需 Tcl/Tk）、`xvfb`（虚拟显示，让 tkinter 窗口能无头实例化）、`libgl1` 等（opencv-python 非 headless 版 import 需 `libGL.so.1`）。
+- 跑法：`xvfb-run -a python -m pytest -v`。
+
+### 14.4 提交测试/CI 改动
+- 改动测试或 `ci.yml` 后，本地先 `python -m pytest -v` 跑绿再提交。
+- 提交时**不要**把 `.venv/`、`__pycache__/`、`.pytest_cache/` 带进去（前两者已在 `.gitignore`，`.pytest_cache/` 需自行避免 `git add .`）。
