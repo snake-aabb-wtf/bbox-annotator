@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # BBox Annotator — Linux/macOS 启动脚本
-# 对应 Windows 的 start.bat：建虚拟环境 + 装依赖 + 清旧日志 + 启动
+# 对应 Windows 的 start.ps1：建虚拟环境 + 装依赖 + 清旧日志 + 启动
 # 用法: ./start.sh   （首次需 chmod +x start.sh）
 
 set -euo pipefail

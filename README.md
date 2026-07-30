@@ -22,7 +22,7 @@
 - 🔍 **缩放 + 平移** — 滚轮缩放到像素级，中键拖拽平移，标大图 / 小目标无压力
 - 📁 **YOLO 格式原生支持** — 每张图片对应一个 `.txt`，`cls cx cy w h` 归一化坐标
 - 🌏 **中文界面** — 状态栏、快捷键帮助全部中文
-- 🚀 **即开即用** — `start.bat` 一键启动，自动处理环境
+- 🚀 **即开即用** — `start.ps1` 一键启动（PowerShell），自动处理环境
 
 ---
 
@@ -32,7 +32,7 @@
 - 🖱️ Drag to draw boxes, right-click to delete
 - 🔍 Zoom to pixel level & pan with middle mouse
 - 📁 Native YOLO format (`cls cx cy w h`)
-- 🚀 One-click launch via `start.bat`
+- 🚀 One-click launch via `start.ps1` (PowerShell)
 
 ---
 
@@ -63,12 +63,12 @@
 
 - **Windows** (Linux/macOS 也能跑，但中文状态栏需要调字体路径)
 - Python 3.8+
-- 依赖：opencv-python, numpy, Pillow（或直接双击 start.bat 自动装）
+- 依赖：opencv-python, numpy, Pillow（或直接右键 start.ps1 用 PowerShell 运行自动装）
 
 ### 使用方法 | Usage
 
 ```bash
-# 1. 双击 start.bat (自动创建 venv + 安装依赖 + 启动)
+# 1. 右键 start.ps1 用 PowerShell 运行 (自动创建 venv + 安装依赖 + 启动)
 #    或者手动：
 python -m venv venv
 venv\Scripts\pip install -r requirements.txt
@@ -104,7 +104,7 @@ BBox-Annotator/
 ├── config.py            # 配置加载/保存
 ├── config.json          # 持久化配置 (图片目录、类别等)
 ├── requirements.txt     # Python 依赖
-├── start.bat            # Windows 一键启动
+├── start.ps1            # Windows 一键启动 (PowerShell)
 ├── LICENSE
 └── README.md
 ```

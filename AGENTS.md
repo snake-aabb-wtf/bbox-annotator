@@ -32,8 +32,8 @@ bbox-annotator/
 ├── config.py          # 配置加载与保存（DEFAULT_CONFIG / load_config / save_config）
 ├── config.json        # 持久化配置（被 .gitignore 之外的常规文件，会被程序读写）
 ├── requirements.txt   # Python 依赖（带版本上限）
-├── start.bat          # Windows 一键启动（建 venv + 装依赖 + 启动）
-├── start.sh           # Linux/macOS 一键启动（与 start.bat 等价）
+├── start.ps1          # Windows 一键启动（PowerShell，建 venv + 装依赖 + 启动）
+├── start.sh           # Linux/macOS 一键启动（与 start.ps1 等价）
 ├── LICENSE
 ├── README.md
 └── AGENTS.md          # 本文件
@@ -46,7 +46,7 @@ bbox-annotator/
 ## 3. 环境搭建与运行
 
 ### 3.1 一键启动（Windows 用户）
-直接双击 `start.bat`。它会：
+直接右键 `start.ps1` 用 PowerShell 运行（或在 PowerShell 中执行 `powershell -ExecutionPolicy Bypass -File start.ps1`）。它会：
 1. 若 `venv/` 不存在则创建虚拟环境；
 2. 检测 `cv2` 是否可导入，缺失则 `pip install -r requirements.txt`；
 3. 备份并清空旧的 `annotate.log`；
@@ -75,7 +75,7 @@ Pillow>=10.0.0,<11
 ```
 修改依赖版本前，务必在本地实跑一次 `main.py` 确认 GUI 正常，尤其 `opencv-python` 的 `highgui` 在目标平台可用。
 
-### 3.4 启动脚本（`start.bat` / `start.sh`）
+### 3.4 启动脚本（`start.ps1` / `start.sh`）
 两个脚本等价，只是平台不同，逻辑完全一致：
 
 1. 若 `venv/` 不存在则 `python -m venv venv`（bash 版用 `python3`）；
@@ -85,7 +85,7 @@ Pillow>=10.0.0,<11
 
 | 脚本 | 平台 | 解释器 | venv 路径 |
 |------|------|--------|-----------|
-| `start.bat` | Windows | `venv\Scripts\python.exe` | `venv\` |
+| `start.ps1` | Windows | `venv\Scripts\python.exe` | `venv\` |
 | `start.sh` | Linux/macOS | `venv/bin/python` | `venv/` |
 
 > 改启动脚本时两文件要保持同步（步骤、提示文案、日志处理一致）。Linux 上 `opencv-python` 需要系统级 `libGL` 等库；若 `highgui` 报 `ImportError: libGL.so.1`，先 `apt install libgl1-mesa-glx`（Debian/Ubuntu）或等价包。
@@ -254,7 +254,7 @@ main.py
 ## 9. 日志
 
 - 日志文件：`annotate.log`（项目根目录），由 `log()` 函数以 `append` 模式写入。
-- `start.bat` / `start.sh` 每次启动会把旧日志备份为 `annotate.log.bak` 再清空。
+- `start.ps1` / `start.sh` 每次启动会把旧日志备份为 `annotate.log.bak` 再清空。
 - `*.log`、`*.log.bak` 均被 `.gitignore` 忽略——**不要提交日志文件**。
 
 ---
@@ -328,7 +328,7 @@ Tkinter 选择器，窗口 `600×480`、不可缩放。核心类 `FolderSelector
 - [ ] `python main.py` 能弹出选择器，选图后 OpenCV 窗口正常打开；
 - [ ] 画框 / 右键删框 / 滚轮缩放 / 平移 均符合预期；
 - [ ] 切图（`D`/`A`）后 `labels/` 下生成正确的 `.txt`，坐标归一化无误；
-- [ ] 改动启动脚本时 `start.bat` 与 `start.sh` 逻辑一致；
+- [ ] 改动启动脚本时 `start.ps1` 与 `start.sh` 逻辑一致；
 - [ ] 不提交 `venv/`、`*.log`（见 §11）。
 
 ---
